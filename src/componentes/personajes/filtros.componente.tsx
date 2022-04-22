@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FiltrarPersonajesThunk } from "../../actions";
+import { FiltrarPersonajesThunk } from "../../actions/FiltrarPersonajes";
 import { IRootState } from "../../store";
 import "./filtros.css";
 

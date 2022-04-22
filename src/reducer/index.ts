@@ -29,6 +29,28 @@ const personajesReducer: Reducer<IEstadoPersonaje, TPersonajesAction> = (
         status: "COMPLETADO_CON_ERROR",
         error: action.error,
       };
+    case "AGREGAR_FAVORITO":
+      return {
+        ...state,
+        personajes: state.personajes.map(personaje => {
+          if (personaje.id === action.personaje.id) {
+            personaje.isFavorite = true;
+          }
+          return personaje;
+        }),
+        favoritos: [...state.favoritos, action.personaje],
+      };
+    case "ELIMINAR_FAVORITO":
+      return {
+        ...state,
+        personajes: state.personajes.map(personaje => {
+          if (personaje.id === action.personaje.id) {
+            personaje.isFavorite = false;
+          }
+          return personaje;
+        }),
+        favoritos: state.favoritos.filter( character => action.personaje.id !== character.id ),
+      };
     default:
       return state;
   }

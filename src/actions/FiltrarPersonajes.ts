@@ -6,6 +6,8 @@ import {
   IFiltrarPersonajesErrorAction,
   IFiltrarPersonajesExitoAction,
   IFiltrarPersonajesThunkAction,
+  IInfo,
+  IPersonaje,
 } from "./interfaces";
 
 const FiltrarPersonajes: ActionCreator<IFiltrarPersonajesAction> = (
@@ -18,8 +20,8 @@ const FiltrarPersonajes: ActionCreator<IFiltrarPersonajesAction> = (
 };
 
 const FiltrarPersonajesExito: ActionCreator<IFiltrarPersonajesExitoAction> = (
-  info: any,
-  personajes: Array<any>
+  info: IInfo,
+  personajes: Array<IPersonaje>
 ) => {
   return {
     type: actionType.FILTRAR_PERSONAJES_EXITO,
@@ -45,6 +47,19 @@ export const FiltrarPersonajesThunk = (
     dispatch(FiltrarPersonajes(busqueda));
     try {
       const { info, results } = await getPersonajes(busqueda, url);
+      const personajesFavoritos = getState().personajesReducer.favoritos;
+
+      if (personajesFavoritos.length > 0) {
+        personajesFavoritos.forEach((personajeFavorito) => {
+          results.map((personaje: any) => {
+            if (personaje.id === personajeFavorito.id) {
+              personaje.isFavorite = true;
+            }
+            return personaje;
+          });
+        });
+      }
+
       dispatch(FiltrarPersonajesExito(info, results));
     } catch (error) {
       dispatch(FiltrarPersonajesError(error));

@@ -1,5 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { IPersonaje } from "../../actions/interfaces";
 import { IRootState } from "../../store";
 import "./grilla-personajes.css";
 import TarjetaPersonaje from "./tarjeta-personaje.componente";
@@ -13,26 +15,28 @@ import TarjetaPersonaje from "./tarjeta-personaje.componente";
  * @returns un JSX element
  */
 const GrillaPersonajes: React.FC = (): JSX.Element => {
-  let { personajes, status } = useSelector<IRootState, any>(
+  let { personajes, status, favoritos } = useSelector<IRootState, any>(
     (state) => state.personajesReducer
   );
 
-  if (personajes) {
-    if (status === "CARGANDO" && personajes.length === 0)
+  const { pathname } = useLocation();
+  const pjs = pathname.includes("/favoritos") ? favoritos : personajes;
+
+  if (pjs) {
+    if (status === "CARGANDO" && pjs.length === 0)
       return <h1>Ingresa tu busqueda</h1>;
-    if (status === "CARGANDO" && personajes.length > 0)
+    if (status === "CARGANDO" && pjs.length > 0)
       return <h1>Cargando...</h1>;
   } else {
-    return <h1> 404 - NOP, no hay personajes que coincidan </h1>;
+    return <h1> 404 - NOPE, no hay personajes que coincidan </h1>;
   }
 
   return (
     <div className="grilla-personajes">
-      {personajes.map((personaje: any) => {
+      {pjs.map((personaje: IPersonaje) => {
         return (
           <TarjetaPersonaje
-            image={personaje.image}
-            name={personaje.name}
+            personaje={personaje}
             key={personaje.created + personaje.id}
           />
         );

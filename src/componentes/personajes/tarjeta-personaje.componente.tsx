@@ -1,4 +1,7 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { AgregarFavoritos, EliminarFavoritos } from "../../actions/FiltrarFavoritos";
+import { IPersonaje } from "../../actions/interfaces";
 import BotonFavorito from "../botones/boton-favorito.componente";
 import "./tarjeta-personaje.css";
 
@@ -11,10 +14,20 @@ import "./tarjeta-personaje.css";
  * @returns un JSX element
  */
 type TarjetaPersonajeProps = {
-  image: any;
-  name: any;
+  personaje: IPersonaje;
 }
-const TarjetaPersonaje: React.FC<TarjetaPersonajeProps> = ({ image, name }): JSX.Element => {
+const TarjetaPersonaje: React.FC<TarjetaPersonajeProps> = ({ personaje }): JSX.Element => {
+  const dispatch = useDispatch();
+  const { image, name, isFavorite } = personaje;
+
+  const handlerFavorite = () => {
+    if(isFavorite) {
+      dispatch(EliminarFavoritos(personaje));
+    } else {
+      dispatch(AgregarFavoritos(personaje))
+    };
+  }
+
   return (
     <div className="tarjeta-personaje">
       <img
@@ -23,7 +36,7 @@ const TarjetaPersonaje: React.FC<TarjetaPersonajeProps> = ({ image, name }): JSX
       />
       <div className="tarjeta-personaje-body">
         <span>{name}</span>
-        <BotonFavorito esFavorito={false} onClick={() => {}} />
+        <BotonFavorito esFavorito={!!isFavorite} onClick={handlerFavorite} />
       </div>
     </div>
   );
