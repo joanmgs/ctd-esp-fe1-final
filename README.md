@@ -1,5 +1,4 @@
 # Entrega Final React Redux y Thunk
 
-## Indice
-
+## Autor
 - Joan Manuel González S.
